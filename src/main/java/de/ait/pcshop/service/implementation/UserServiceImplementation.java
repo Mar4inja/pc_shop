@@ -28,7 +28,11 @@ public class UserServiceImplementation implements UserService {
     public User addUser(User user) {
         user.setId(null);
 
-        if (user.getTitle() == null || user.getTitle().isEmpty() || user.getFirstName() == null || user.getFirstName().isEmpty() || user.getLastName() == null || user.getLastName().isEmpty() || user.getAddress() == null || user.getEmail() == null || user.getEmail().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty()) {
+        if (user.getTitle() == null || user.getTitle().isEmpty()
+                || user.getFirstName() == null || user.getFirstName().isEmpty()
+                || user.getLastName() == null || user.getLastName().isEmpty()
+                || user.getEmail() == null || user.getEmail().isEmpty()
+                || user.getPassword() == null || user.getPassword().isEmpty()) {
             throw new IllegalArgumentException("All fields are required");
         }
 
@@ -118,7 +122,6 @@ public class UserServiceImplementation implements UserService {
             existingUser.setTitle(currentUser.getTitle());
             existingUser.setFirstName(currentUser.getFirstName());
             existingUser.setLastName(currentUser.getLastName());
-            existingUser.setAddress(currentUser.getAddress());
 
             return userRepository.save(existingUser);
         } else {

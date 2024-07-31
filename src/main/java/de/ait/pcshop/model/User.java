@@ -28,12 +28,21 @@ public class User{
     @Column(name = "last_name")
     private String lastName;
 
-    @Embedded
-    private Address address;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "post_index")
+    private String postIndex;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "street")
+    private String street;
 
     @Column(name = "email")
     private String email;
