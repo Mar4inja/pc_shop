@@ -38,6 +38,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 }
 
+    @PutMapping("/auth/me/update")
+    public ResponseEntity<User> updateData(Authentication authentication, @RequestBody User updatedUser) {
+        User user = userService.updateUser(authentication, updatedUser);
+        return ResponseEntity.ok(userService.getUserInfo(authentication));
+    }
+
     @PostMapping("/auth/me/disable")
     public ResponseEntity<User> disableUser(Authentication authentication) {
    return ResponseEntity.ok(userService.disableUser(authentication));

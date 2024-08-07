@@ -69,11 +69,6 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-    @Override
     public User deleteUser(Authentication authentication) {
         User currentUser = findByEmail(authentication.getName());
 
@@ -106,24 +101,58 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User updateUser(User updatedUser) {
-        User currentUser = userRepository.findById(updatedUser.getId()).orElse(null);
+    public User updateUser(Authentication authentication, User updatedUser) {
+        User currentUser = findByEmail(authentication.getName());
         if (currentUser == null) {
-            throw new IllegalArgumentException("User not found");
+            throw new IllegalArgumentException("User is not found");
         }
+
         Long id = currentUser.getId();
 
         Optional<User> existingUserOptional = userRepository.findById(id);
         if (existingUserOptional.isPresent()) {
             User existingUser = existingUserOptional.get();
-            existingUser.setTitle(currentUser.getTitle());
-            existingUser.setFirstName(currentUser.getFirstName());
-            existingUser.setLastName(currentUser.getLastName());
 
+            if (updatedUser.getTitle() != null) {
+                existingUser.setTitle(updatedUser.getTitle());
+            }
+            if (updatedUser.getFirstName() != null) {
+                existingUser.setFirstName(updatedUser.getFirstName());
+            }
+            if (updatedUser.getLastName() != null) {
+                existingUser.setLastName(updatedUser.getLastName());
+            }
+            if (updatedUser.getCountry() != null) {
+                existingUser.setCountry(updatedUser.getCountry());
+            }
+            if (updatedUser.getPostIndex() != null) {
+                existingUser.setPostIndex(updatedUser.getPostIndex());
+            }
+            if (updatedUser.getCity() != null) {
+                existingUser.setCity(updatedUser.getCity());
+            }
+            if (updatedUser.getStreet() != null) {
+                existingUser.setStreet(updatedUser.getStreet());
+            }
+
+            // Сохраняем обновленного пользователя в базе данных и возвращаем его
             return userRepository.save(existingUser);
         } else {
-            throw new IllegalArgumentException("User WITH id " + id + " not found");
+            // Если пользователь с указанным ID не найден, бросаем исключение
+            throw new IllegalArgumentException("User with ID " + updatedUser.getId() + " not found");
         }
+    }
+
+    @Override
+    public User getUserInfo(Authentication authentication) {
+        String username = authentication.getName();
+        User currentUser = findByEmail(username);
+
+        if (currentUser == null) {
+            throw new NoSuchElementException("User not found");
+        }
+
+        return (currentUser);
     }
 
     @Override
