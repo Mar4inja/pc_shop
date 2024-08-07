@@ -9,10 +9,13 @@ import de.ait.pcshop.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -23,16 +26,13 @@ public class UserServiceImplementation implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
 
     @Override
     public User addUser(User user) {
         user.setId(null);
 
-        if (user.getTitle() == null || user.getTitle().isEmpty()
-                || user.getFirstName() == null || user.getFirstName().isEmpty()
-                || user.getLastName() == null || user.getLastName().isEmpty()
-                || user.getEmail() == null || user.getEmail().isEmpty()
-                || user.getPassword() == null || user.getPassword().isEmpty()) {
+        if (user.getTitle() == null || user.getTitle().isEmpty() || user.getFirstName() == null || user.getFirstName().isEmpty() || user.getLastName() == null || user.getLastName().isEmpty() || user.getEmail() == null || user.getEmail().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty() || user.getCountry() == null || user.getCountry().isEmpty() || user.getCity() == null || user.getCity().isEmpty() || user.getStreet() == null || user.getStreet().isEmpty() || user.getPostIndex() == null || user.getPostIndex().isEmpty()) {
             throw new IllegalArgumentException("All fields are required");
         }
 
@@ -43,6 +43,7 @@ public class UserServiceImplementation implements UserService {
         user.setRoles(Collections.singleton(roleRepository.findByTitle("ROLE_USER")));
         user.setRegistrationDate(LocalDateTime.now());
         validatePassword(user.getPassword());
+        user.setPassword(encoder.encode(user.getPassword()));
         user.setActive(true);
         User savedUser = userRepository.save(user);
         logger.info("User with" + user.getEmail() + "successfully registered");
@@ -73,39 +74,35 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void deleteUserById(Long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
+    public User deleteUser(Authentication authentication) {
+        User currentUser = findByEmail(authentication.getName());
+
+        if (currentUser != null) {
+            userRepository.delete(currentUser);
+        } else {
+            throw new NoSuchElementException("Пользователь не найден");
         }
+        return currentUser;
     }
 
     @Override
-    public void disableUserById(Long id) {
-        if (userRepository.existsById(id)) {
-            User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-            user.setActive(false);
-            userRepository.save(user);
-
-            logger.info("User with ID " + id + " successfully disabled");
-        } else {
-            logger.error("User with ID " + id + " not found");
-            throw new RuntimeException("User not found");
+    public User disableUser(Authentication authentication) {
+        User currentUser = findByEmail(authentication.getName());
+        if (currentUser != null) {
+            currentUser.setActive(false);
+            userRepository.save(currentUser);
         }
+        return currentUser;
     }
 
     @Override
-    public void enableUserById(Long id) {
-        if (userRepository.existsById(id)) {
-            User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
-            user.setActive(true);
-
-            userRepository.save(user);
-            logger.info("User with ID " + id + " successfully enabled");
-        } else {
-            logger.error("User with ID " + id + " not found");
-            throw new RuntimeException("User not found");
+    public User enableUser(Authentication authentication) {
+        User curentUser = findByEmail(authentication.getName());
+        if (curentUser != null) {
+            curentUser.setActive(true);
+            userRepository.save(curentUser);
         }
+        return curentUser;
     }
 
     @Override
@@ -127,5 +124,13 @@ public class UserServiceImplementation implements UserService {
         } else {
             throw new IllegalArgumentException("User WITH id " + id + " not found");
         }
+    }
+
+    @Override
+    public User findByEmail(String username) {
+        if (userRepository.findByEmail(username) != null) {
+            return userRepository.findByEmail(username);
+        }
+        return null;
     }
 }

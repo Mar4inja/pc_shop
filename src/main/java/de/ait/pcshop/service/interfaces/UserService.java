@@ -1,6 +1,7 @@
 package de.ait.pcshop.service.interfaces;
 
 import de.ait.pcshop.model.User;
+import org.springframework.security.core.Authentication;
 
 public interface UserService {
 
@@ -8,11 +9,13 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    void deleteUserById(Long id);
+    User deleteUser(Authentication authentication);
 
-    void disableUserById(Long id);
+    User disableUser(Authentication authentication);
 
-    void enableUserById(Long id);
+    User enableUser(Authentication authentication);
 
     User updateUser(User user);
+
+    User findByEmail(String username);
 }
