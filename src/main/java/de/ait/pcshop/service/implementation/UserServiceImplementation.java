@@ -75,7 +75,7 @@ public class UserServiceImplementation implements UserService {
         if (currentUser != null) {
             userRepository.delete(currentUser);
         } else {
-            throw new NoSuchElementException("Пользователь не найден");
+            throw new NoSuchElementException("User is not found");
         }
         return currentUser;
     }
