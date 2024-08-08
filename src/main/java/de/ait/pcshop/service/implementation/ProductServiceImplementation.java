@@ -20,24 +20,51 @@ public class ProductServiceImplementation implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-
     @Override
     public Product addProduct(Product product) {
-        product.setId(null);
+        product.setId(null); // Устанавливаем id в null
 
-        if (product.getType() == null || product.getType().isEmpty()
-                || product.getModel() == null || product.getModel().isEmpty()
-                || product.getDescription() == null || product.getDescription().isEmpty()
-                || product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) == 0) {
-            throw new IllegalArgumentException("All fields are required");
+        if (product.getType() == null || product.getType().isEmpty() ||
+                product.getModel() == null || product.getModel().isEmpty() ||
+                product.getDescription() == null || product.getDescription().isEmpty() ||
+                product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("All fields are required and price must be greater than zero.");
         }
-        if (productRepository.existsById(product.getId())) {
-            throw new IllegalArgumentException("Product already exists");
+
+        if (productRepository.findByTypeAndModel(product.getType(), product.getModel()) != null) {
+            throw new IllegalArgumentException("Product with type " + product.getType() + " and model " + product.getModel() + " already exists.");
         }
+
         product.setProductRegistrationDate(LocalDateTime.now());
-        product.setIsActiv(true);
+        product.setIsActive(true);
         return productRepository.save(product);
     }
+//    @Override
+//    public Product addProduct(Product product) {
+//
+//        product.setId(null);
+//
+//        if (product.getType() == null || product.getType().isEmpty()
+//                || product.getModel() == null || product.getModel().isEmpty()
+//                || product.getDescription() == null || product.getDescription().isEmpty()
+//                || product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+//            throw new IllegalArgumentException("All fields are required");
+//        }
+//
+//        // Проверяем, существует ли продукт с данным id
+//        System.out.println("Checking if product exists with id: " + product.getId());
+//        if (productRepository.existsById(product.getId())) {
+//            throw new IllegalArgumentException("Product already exists");
+//        }
+//
+//        product.setProductRegistrationDate(LocalDateTime.now());
+//        product.setIsActive(true);
+//
+//        Product savedProduct = productRepository.save(product);
+//        System.out.println("Product after saving: " + savedProduct);
+//
+//        return savedProduct;
+//    }
 
 
     @Override
@@ -110,7 +137,7 @@ public class ProductServiceImplementation implements ProductService {
     public void disableProduct(Long id) {
         Product currentProduct = productRepository.findById(id).orElse(null);
         if (currentProduct != null) {
-            currentProduct.setIsActiv(false);
+            currentProduct.setIsActive(false);
             productRepository.save(currentProduct);
         }
     }
@@ -119,7 +146,7 @@ public class ProductServiceImplementation implements ProductService {
     public void enableProduct(Long id) {
         Product currentProduct = productRepository.findById(id).orElse(null);
         if (currentProduct != null) {
-            currentProduct.setIsActiv(true);
+            currentProduct.setIsActive(true);
             productRepository.save(currentProduct);
         }
     }

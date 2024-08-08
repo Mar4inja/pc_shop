@@ -32,8 +32,8 @@ public class Product {
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "is_activ")
-    private Boolean isActiv;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @Column(name = "product_registration_date")
     private LocalDateTime productRegistrationDate;

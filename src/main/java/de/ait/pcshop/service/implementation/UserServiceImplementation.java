@@ -32,7 +32,15 @@ public class UserServiceImplementation implements UserService {
     public User addUser(User user) {
         user.setId(null);
 
-        if (user.getTitle() == null || user.getTitle().isEmpty() || user.getFirstName() == null || user.getFirstName().isEmpty() || user.getLastName() == null || user.getLastName().isEmpty() || user.getEmail() == null || user.getEmail().isEmpty() || user.getPassword() == null || user.getPassword().isEmpty() || user.getCountry() == null || user.getCountry().isEmpty() || user.getCity() == null || user.getCity().isEmpty() || user.getStreet() == null || user.getStreet().isEmpty() || user.getPostIndex() == null || user.getPostIndex().isEmpty()) {
+        if (user.getTitle() == null || user.getTitle().isEmpty()
+                || user.getFirstName() == null || user.getFirstName().isEmpty()
+                || user.getLastName() == null || user.getLastName().isEmpty()
+                || user.getEmail() == null || user.getEmail().isEmpty()
+                || user.getPassword() == null || user.getPassword().isEmpty()
+                || user.getCountry() == null || user.getCountry().isEmpty()
+                || user.getCity() == null || user.getCity().isEmpty()
+                || user.getStreet() == null || user.getStreet().isEmpty()
+                || user.getPostIndex() == null || user.getPostIndex().isEmpty()) {
             throw new IllegalArgumentException("All fields are required");
         }
 
