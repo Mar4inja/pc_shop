@@ -61,6 +61,17 @@ public class User implements UserDetails {
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
+    public User(String title, String firstName, String lastName, String email, String password, String country, String city, String street, String postIndex) {
+        this.title = title;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.city = city;
+        this.street = street;
+        this.postIndex = postIndex;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -11,6 +11,6 @@ spring:
 #      hibernate:
 #        auto_quote_keyword: true
 
-#key:
-#  access: Dm7QXW4YowIjJcIV/Qbs4u9R/RCCTPqeg7mkhaCJ6tA=
-#  refresh: 3zT4pEV8P/GQ6hTpjaZTsY8KRft4l6l0qtaCgWk5djg=
+key:
+  access: Dm7QXW4YowIjJcIV/Qbs4u9R/RCCTPqeg7mkhaCJ6tA=
+  refresh: 3zT4pEV8P/GQ6hTpjaZTsY8KRft4l6l0qtaCgWk5djg=

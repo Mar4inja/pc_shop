@@ -22,7 +22,7 @@ public class ProductServiceImplementation implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-        product.setId(null); // Устанавливаем id в null
+        product.setId(null);
 
         if (product.getType() == null || product.getType().isEmpty() ||
                 product.getModel() == null || product.getModel().isEmpty() ||
@@ -39,32 +39,6 @@ public class ProductServiceImplementation implements ProductService {
         product.setIsActive(true);
         return productRepository.save(product);
     }
-//    @Override
-//    public Product addProduct(Product product) {
-//
-//        product.setId(null);
-//
-//        if (product.getType() == null || product.getType().isEmpty()
-//                || product.getModel() == null || product.getModel().isEmpty()
-//                || product.getDescription() == null || product.getDescription().isEmpty()
-//                || product.getPrice() == null || product.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
-//            throw new IllegalArgumentException("All fields are required");
-//        }
-//
-//        // Проверяем, существует ли продукт с данным id
-//        System.out.println("Checking if product exists with id: " + product.getId());
-//        if (productRepository.existsById(product.getId())) {
-//            throw new IllegalArgumentException("Product already exists");
-//        }
-//
-//        product.setProductRegistrationDate(LocalDateTime.now());
-//        product.setIsActive(true);
-//
-//        Product savedProduct = productRepository.save(product);
-//        System.out.println("Product after saving: " + savedProduct);
-//
-//        return savedProduct;
-//    }
 
 
     @Override
